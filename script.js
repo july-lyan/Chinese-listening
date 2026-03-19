@@ -17,7 +17,7 @@ class ChineseListeningApp {
         this.loadSettings();
         this.setupEventListeners();
         this.filterQuestionsByDifficulty();
-        this.loadQuestion(0);
+        // 移除初始化时加载问题，因为此时练习页面还没有显示
         this.handleHashChange();
         this.applyTheme();
     }
@@ -89,16 +89,50 @@ class ChineseListeningApp {
         if (index >= 0 && index < this.filteredQuestions.length) {
             this.currentQuestionIndex = index;
             const question = this.filteredQuestions[index];
-            document.getElementById('question-text').textContent = question.question;
+            
+            // 检查元素是否存在，避免在页面未加载时出错
+            const questionText = document.getElementById('question-text');
+            if (questionText) {
+                questionText.textContent = question.question;
+            }
             
             // 更新图片
-            document.getElementById('image-a').src = question.imagePath;
-            document.getElementById('image-b').src = question.imagePath;
+            const imageContainer = document.querySelector('.image-container');
+            if (imageContainer) {
+                if (question.type === 'select_image') {
+                    // 显示图片选择模式
+                    imageContainer.style.display = 'flex';
+                    const imageA = document.getElementById('image-a');
+                    const imageB = document.getElementById('image-b');
+                    if (imageA) imageA.src = question.imagePathA || question.imagePath;
+                    if (imageB) imageB.src = question.imagePathB || question.imagePath;
+                } else {
+                    // 隐藏图片，显示句子选择模式
+                    imageContainer.style.display = 'none';
+                }
+            }
+            
+            // 更新选项容器
+            const optionsContainer = document.querySelector('.options');
+            if (optionsContainer) {
+                if (question.type === 'select_sentence') {
+                    // 显示句子选择模式
+                    optionsContainer.style.display = 'block';
+                } else {
+                    // 隐藏句子选项，显示图片选择模式
+                    optionsContainer.style.display = 'none';
+                }
+            }
             
             // 更新选项
             const options = document.querySelectorAll('.option');
             options.forEach((option, i) => {
-                option.textContent = question.options[i];
+                if (i < question.options.length) {
+                    option.textContent = question.options[i];
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
                 option.classList.remove('selected');
                 option.classList.remove('correct');
                 option.classList.remove('incorrect');
@@ -106,7 +140,9 @@ class ChineseListeningApp {
             
             // 隐藏反馈区域
             const feedbackContainer = document.getElementById('feedback-container');
-            feedbackContainer.style.display = 'none';
+            if (feedbackContainer) {
+                feedbackContainer.style.display = 'none';
+            }
         }
     }
 
@@ -139,9 +175,12 @@ class ChineseListeningApp {
                 const difficulty = button.getAttribute('data-difficulty');
                 this.settings.difficulty = difficulty;
                 this.filterQuestionsByDifficulty();
-                this.loadQuestion(0);
-                this.saveSettings();
+                // 先切换到练习页面，然后再加载问题
                 window.location.hash = 'practice';
+                // 延迟加载问题，确保页面已经切换
+                setTimeout(() => {
+                    this.loadQuestion(0);
+                }, 100);
             });
         });
 
@@ -155,6 +194,29 @@ class ChineseListeningApp {
             option.addEventListener('click', () => {
                 this.selectOption(option);
             });
+        });
+
+        // 图片点击事件（用于图片选择题）
+        document.getElementById('image-a').addEventListener('click', () => {
+            const question = this.filteredQuestions[this.currentQuestionIndex];
+            if (question && question.type === 'select_image') {
+                // 模拟选择第一个选项（图片A）
+                const options = document.querySelectorAll('.option');
+                if (options.length > 0) {
+                    this.selectOption(options[0]);
+                }
+            }
+        });
+
+        document.getElementById('image-b').addEventListener('click', () => {
+            const question = this.filteredQuestions[this.currentQuestionIndex];
+            if (question && question.type === 'select_image') {
+                // 模拟选择第二个选项（图片B）
+                const options = document.querySelectorAll('.option');
+                if (options.length > 1) {
+                    this.selectOption(options[1]);
+                }
+            }
         });
 
         // 上一题/下一题按钮
@@ -226,6 +288,11 @@ class ChineseListeningApp {
         if (targetPage) {
             targetPage.classList.add('active');
             this.currentPage = pageId;
+
+            // 如果切换到练习页面，加载当前问题
+            if (pageId === 'practice') {
+                this.loadQuestion(this.currentQuestionIndex);
+            }
 
             // 更新导航链接状态
             document.querySelectorAll('.nav-link').forEach(link => {

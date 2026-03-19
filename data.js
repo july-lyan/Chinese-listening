@@ -3,6 +3,7 @@ const questions = [
   {
     id: 1,
     difficulty: 'easy',
+    type: 'select_sentence',
     audioText: '你好，很高兴认识你。',
     pinyin: 'Nǐ hǎo, hěn gāo xìng rèn shi nǐ.',
     translation: 'Hello, nice to meet you.',
@@ -17,8 +18,25 @@ const questions = [
     answer: 1
   },
   {
+    id: 10,
+    difficulty: 'easy',
+    type: 'select_image',
+    audioText: '一个男孩在看书。',
+    pinyin: 'Yī gè nán hái zài kàn shū.',
+    translation: 'A boy is reading a book.',
+    imagePathA: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=boy%20reading%20book%20simple%20illustration&image_size=square',
+    imagePathB: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=girl%20reading%20book%20simple%20illustration&image_size=square',
+    question: '哪张图片符合描述？',
+    options: [
+      '图片A',
+      '图片B'
+    ],
+    answer: 0
+  },
+  {
     id: 2,
     difficulty: 'easy',
+    type: 'select_sentence',
     audioText: '今天天气很好。',
     pinyin: 'Jīn tiān tiān qì hěn hǎo.',
     translation: 'The weather is very good today.',
@@ -35,6 +53,7 @@ const questions = [
   {
     id: 3,
     difficulty: 'easy',
+    type: 'select_sentence',
     audioText: '我喜欢吃苹果。',
     pinyin: 'Wǒ xǐ huān chī píng guǒ.',
     translation: 'I like to eat apples.',
@@ -48,11 +67,28 @@ const questions = [
     ],
     answer: 1
   },
+  {
+    id: 11,
+    difficulty: 'easy',
+    type: 'select_image',
+    audioText: '桌子上有一个苹果。',
+    pinyin: 'Zhuō zi shàng yǒu yī gè píng guǒ.',
+    translation: 'There is an apple on the table.',
+    imagePathA: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=apple%20on%20table%20simple%20illustration&image_size=square',
+    imagePathB: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=banana%20on%20table%20simple%20illustration&image_size=square',
+    question: '哪张图片符合描述？',
+    options: [
+      '图片A',
+      '图片B'
+    ],
+    answer: 0
+  },
   
   // 中级难度
   {
     id: 4,
     difficulty: 'medium',
+    type: 'select_sentence',
     audioText: '我每天早上七点起床，然后洗脸刷牙。',
     pinyin: 'Wǒ měi tiān zǎo shang qī diǎn qǐ chuáng, rán hòu xǐ liǎn shuā yá.',
     translation: 'I get up at seven oclock every morning, then wash my face and brush my teeth.',
@@ -69,6 +105,7 @@ const questions = [
   {
     id: 5,
     difficulty: 'medium',
+    type: 'select_sentence',
     audioText: '昨天我去了图书馆，借了三本书。',
     pinyin: 'Zuó tiān wǒ qù le tú shū guǎn, jiè le sān běn shū.',
     translation: 'Yesterday I went to the library and borrowed three books.',
@@ -83,26 +120,27 @@ const questions = [
     answer: 1
   },
   {
-    id: 6,
+    id: 12,
     difficulty: 'medium',
-    audioText: '明天是星期天，我打算和朋友一起去爬山。',
-    pinyin: 'Míng tiān shì xīng qī tiān, wǒ dǎ suàn hé péng yǒu yī qǐ qù pá shān.',
-    translation: 'Tomorrow is Sunday, I plan to go hiking with friends.',
-    imagePath: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=friends%20hiking%20mountain%20simple%20illustration&image_size=square',
-    question: '明天说话人打算做什么？',
+    type: 'select_image',
+    audioText: '两个朋友在爬山。',
+    pinyin: 'Liǎng gè péng yǒu zài pá shān.',
+    translation: 'Two friends are climbing a mountain.',
+    imagePathA: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=two%20friends%20hiking%20mountain%20simple%20illustration&image_size=square',
+    imagePathB: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=one%20person%20hiking%20mountain%20simple%20illustration&image_size=square',
+    question: '哪张图片符合描述？',
     options: [
-      '和家人一起去购物。',
-      '和朋友一起去爬山。',
-      '在家休息。',
-      '去上班。'
+      '图片A',
+      '图片B'
     ],
-    answer: 1
+    answer: 0
   },
   
   // 高级难度
   {
     id: 7,
     difficulty: 'hard',
+    type: 'select_sentence',
     audioText: '中国是一个有着五千年历史的文明古国，拥有丰富的文化遗产和美丽的自然风光。',
     pinyin: 'Zhōng guó shì yī gè yǒu zhe wǔ qiān nián lì shǐ de wén míng gǔ guó, yōng yǒu fēng fù de wén huà yí chǎn hé měi lì de zì rán fēng guāng.',
     translation: 'China is an ancient civilization with a history of 5,000 years, boasting rich cultural heritage and beautiful natural scenery.',
@@ -119,6 +157,7 @@ const questions = [
   {
     id: 8,
     difficulty: 'hard',
+    type: 'select_sentence',
     audioText: '学习一门新语言需要持之以恒的努力和大量的练习，只有这样才能取得进步。',
     pinyin: 'Xué xí yī mén xīn yǔ yán xū yào chí zhī yǐ héng de nǔ lì hé dà liàng de liàn xí, zhǐ yǒu zhè yàng cái néng qǔ dé jìn bù.',
     translation: 'Learning a new language requires persistent effort and a lot of practice; only in this way can one make progress.',
@@ -133,20 +172,20 @@ const questions = [
     answer: 2
   },
   {
-    id: 9,
+    id: 13,
     difficulty: 'hard',
-    audioText: '随着科技的快速发展，人工智能已经在许多领域得到了广泛应用，改变了我们的生活方式。',
-    pinyin: 'Suí zhe kē jì de kuài sù fā zhǎn, rén gōng zhì néng yǐ jīng zài xǔ duō lǐng yù dé dào le guǎng fàn yìng yòng, gǎi biàn le wǒ men de shēng huó fāng shì.',
-    translation: 'With the rapid development of technology, artificial intelligence has been widely applied in many fields, changing our way of life.',
-    imagePath: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=artificial%20intelligence%20technology%20future%20life%20illustration&image_size=square',
-    question: '人工智能的发展带来了什么影响？',
+    type: 'select_image',
+    audioText: '人工智能正在改变我们的生活方式。',
+    pinyin: 'Rén gōng zhì néng zhèng zài gǎi biàn wǒ men de shēng huó fāng shì.',
+    translation: 'Artificial intelligence is changing our way of life.',
+    imagePathA: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=artificial%20intelligence%20technology%20future%20life%20illustration&image_size=square',
+    imagePathB: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20life%20without%20technology%20illustration&image_size=square',
+    question: '哪张图片符合描述？',
     options: [
-      '没有改变我们的生活。',
-      '只在少数领域应用。',
-      '改变了我们的生活方式。',
-      '减缓了科技发展。'
+      '图片A',
+      '图片B'
     ],
-    answer: 2
+    answer: 0
   }
 ];
 
