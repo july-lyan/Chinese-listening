@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>听听看 - 中文听力练习</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header class="app-header">
+            <h1>听听看</h1>
+            <nav class="app-nav">
+                <ul>
+                    <li><a href="#home" class="nav-link active">首页</a></li>
+                    <li><a href="#practice" class="nav-link">练习</a></li>
+                    <li><a href="#progress" class="nav-link">进度</a></li>
+                    <li><a href="#settings" class="nav-link">设置</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main class="app-content">
+            <section id="home" class="page active">
+                <h2>欢迎使用听听看</h2>
+                <p>提高您的中文听力水平</p>
+                <div class="difficulty-container">
+                    <div class="difficulty-card easy">
+                        <div class="difficulty-header">
+                            <h3>初级</h3>
+                            <span class="difficulty-badge">简单</span>
+                        </div>
+                        <p class="difficulty-subtitle">适合初学者</p>
+                        <p class="difficulty-description">基础词汇和简单句子，语速较慢，适合中文水平初级的学习者。</p>
+                        <button class="difficulty-button" data-difficulty="easy">开始练习</button>
+                    </div>
+                    <div class="difficulty-card medium">
+                        <div class="difficulty-header">
+                            <h3>中级</h3>
+                            <span class="difficulty-badge">中等</span>
+                        </div>
+                        <p class="difficulty-subtitle">适合有一定基础的学习者</p>
+                        <p class="difficulty-description">常用词汇和复杂句子，语速适中，适合中文水平中级的学习者。</p>
+                        <button class="difficulty-button" data-difficulty="medium">开始练习</button>
+                    </div>
+                    <div class="difficulty-card hard">
+                        <div class="difficulty-header">
+                            <h3>高级</h3>
+                            <span class="difficulty-badge">困难</span>
+                        </div>
+                        <p class="difficulty-subtitle">适合高级学习者</p>
+                        <p class="difficulty-description">高级词汇和复杂语境，语速较快，适合中文水平高级的学习者。</p>
+                        <button class="difficulty-button" data-difficulty="hard">开始练习</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="practice" class="page">
+                <h2>听力练习</h2>
+                <div class="practice-container">
+                    <div class="audio-player">
+                        <button id="play-audio">播放</button>
+                        <span id="audio-progress">0:00 / 0:00</span>
+                        <div class="audio-wave" id="audio-wave" style="display: none;">
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                        </div>
+                    </div>
+                    <div class="image-container">
+                        <div class="image-wrapper">
+                            <img id="image-a" src="" alt="选项 A 图片">
+                            <span class="image-label">A</span>
+                        </div>
+                        <div class="image-wrapper">
+                            <img id="image-b" src="" alt="选项 B 图片">
+                            <span class="image-label">B</span>
+                        </div>
+                    </div>
+                    <div class="question-container">
+                        <p id="question-text">问题将显示在这里</p>
+                        <div class="options">
+                            <button class="option">选项 A</button>
+                            <button class="option">选项 B</button>
+                            <button class="option">选项 C</button>
+                            <button class="option">选项 D</button>
+                        </div>
+                        <div class="feedback-container" id="feedback-container" style="display: none;">
+                            <div class="feedback-message" id="feedback-message"></div>
+                            <div class="text-info">
+                                <div class="text-item">
+                                    <span class="text-label">中文原文：</span>
+                                    <span class="text-content" id="chinese-text"></span>
+                                </div>
+                                <div class="text-item">
+                                    <span class="text-label">拼音：</span>
+                                    <span class="text-content" id="pinyin-text"></span>
+                                </div>
+                                <div class="text-item">
+                                    <span class="text-label">英文翻译：</span>
+                                    <span class="text-content" id="translation-text"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="practice-controls">
+                        <button id="prev-question">上一题</button>
+                        <button id="next-question">下一题</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="progress" class="page">
+                <h2>学习进度</h2>
+                <div class="progress-container">
+                    <div class="progress-item">
+                        <h3>今日练习</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <p>已完成 6/10 题</p>
+                    </div>
+                    <div class="progress-item">
+                        <h3>本周练习</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <p>已完成 27/60 题</p>
+                    </div>
+                    <div class="progress-item">
+                        <h3>总体进度</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                        <p>已完成 125/500 题</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="settings" class="page">
+                <h2>设置</h2>
+                <div class="settings-container">
+                    <div class="setting-item">
+                        <label for="difficulty">难度级别</label>
+                        <select id="difficulty">
+                            <option value="easy">简单</option>
+                            <option value="medium" selected>中等</option>
+                            <option value="hard">困难</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="audio-speed">音频速度</label>
+                        <input type="range" id="audio-speed" min="0.5" max="1.5" step="0.1" value="1">
+                        <span id="speed-value">1.0x</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="theme">主题</label>
+                        <select id="theme">
+                            <option value="light" selected>浅色</option>
+                            <option value="dark">深色</option>
+                        </select>
+                    </div>
+                    <button id="save-settings">保存设置</button>
+                </div>
+            </section>
+            
+            <section id="results" class="page">
+                <h2>练习结果</h2>
+                <div class="results-container">
+                    <div class="score-card">
+                        <h3>总分</h3>
+                        <div class="score-value" id="total-score">0</div>
+                        <div class="score-info">
+                            <span id="correct-count">0</span> 正确 / <span id="total-count">0</span> 总题数
+                        </div>
+                    </div>
+                    
+                    <div class="review-container">
+                        <h3>答题回顾</h3>
+                        <div class="review-list" id="review-list">
+                            <!-- 答题回顾项将通过JavaScript动态添加 -->
+                        </div>
+                    </div>
+                    
+                    <div class="results-buttons">
+                        <button id="play-again">再来一次</button>
+                        <button id="change-difficulty">换个难度</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="app-footer">
+            <p>&copy; 2026 听听看 - 中文听力练习</p>
+        </footer>
+    </div>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
