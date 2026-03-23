@@ -28,10 +28,14 @@ class ChineseListeningApp {
                 let supabaseUrl = ''
                 let supabaseKey = ''
                 
-                // 尝试从环境变量读取
-                if (process && process.env) {
+                // 尝试从环境变量读取（支持浏览器和Node.js环境）
+                if (typeof process !== 'undefined' && process.env) {
                   supabaseUrl = process.env.Project_URL || ''
                   supabaseKey = process.env.Publishable_Key || ''
+                } else if (typeof window !== 'undefined' && window.env) {
+                  // 浏览器环境中的环境变量
+                  supabaseUrl = window.env?.Project_URL || ''
+                  supabaseKey = window.env?.Publishable_Key || ''
                 }
                 
                 // 如果环境变量中没有，使用默认值
