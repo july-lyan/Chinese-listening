@@ -1,0 +1,39 @@
+{
+  "appid": "touristappid",
+  "pages": [
+    "pages/home/home",
+    "pages/practice/practice",
+    "pages/results/results"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFB347",
+    "navigationBarTitleText": "听听看",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/practice/practice",
+        "text": "练习"
+      },
+      {
+        "pagePath": "pages/results/results",
+        "text": "结果"
+      }
+    ],
+    "backgroundColor": "#FFF8E1",
+    "borderStyle": "black",
+    "selectedColor": "#FF8C00",
+    "color": "#5D4037"
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true
+}

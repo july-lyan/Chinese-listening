@@ -1,0 +1,39 @@
+<!-- home.wxml -->
+<view class="home-container">
+  <view class="header">
+    <text class="title">听听看</text>
+    <text class="subtitle">提高您的中文听力水平</text>
+  </view>
+  
+  <view class="difficulty-container">
+    <view class="difficulty-card easy">
+      <view class="difficulty-header">
+        <text class="difficulty-title">初级</text>
+        <text class="difficulty-badge">简单</text>
+      </view>
+      <text class="difficulty-subtitle">适合初学者</text>
+      <text class="difficulty-description">基础词汇和简单句子，语速较慢，适合中文水平初级的学习者。</text>
+      <button class="difficulty-button" bindtap="startPractice" data-difficulty="easy">开始练习</button>
+    </view>
+    
+    <view class="difficulty-card medium">
+      <view class="difficulty-header">
+        <text class="difficulty-title">中级</text>
+        <text class="difficulty-badge">中等</text>
+      </view>
+      <text class="difficulty-subtitle">适合有一定基础的学习者</text>
+      <text class="difficulty-description">常用词汇和复杂句子，语速适中，适合中文水平中级的学习者。</text>
+      <button class="difficulty-button" bindtap="startPractice" data-difficulty="medium">开始练习</button>
+    </view>
+    
+    <view class="difficulty-card hard">
+      <view class="difficulty-header">
+        <text class="difficulty-title">高级</text>
+        <text class="difficulty-badge">困难</text>
+      </view>
+      <text class="difficulty-subtitle">适合高级学习者</text>
+      <text class="difficulty-description">高级词汇和复杂语境，语速较快，适合中文水平高级的学习者。</text>
+      <button class="difficulty-button" bindtap="startPractice" data-difficulty="hard">开始练习</button>
+    </view>
+  </view>
+</view>

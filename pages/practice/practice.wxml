@@ -1,0 +1,64 @@
+<!-- practice.wxml -->
+<view class="practice-container">
+  <view class="audio-player">
+    <button id="play-audio" bindtap="toggleAudio">{{isPlaying ? '暂停' : '播放'}}</button>
+    <text id="audio-progress">{{audioProgress}}</text>
+    <view class="audio-wave" wx:if="{{isPlaying}}">
+      <view class="wave-bar"></view>
+      <view class="wave-bar"></view>
+      <view class="wave-bar"></view>
+      <view class="wave-bar"></view>
+      <view class="wave-bar"></view>
+    </view>
+  </view>
+  
+  <view class="image-container" wx:if="{{currentQuestion.type === 'select_image'}}">
+    <view class="image-wrapper" bindtap="selectImage" data-index="0">
+      <image id="image-a" src="{{currentQuestion.imagePathA || currentQuestion.imagePath}}" mode="aspectFill" bindload="imageLoad" binderror="imageError"></image>
+      <view class="image-loading" wx:if="{{!imageAloaded}}">
+        <text>加载中...</text>
+      </view>
+      <text class="image-label">A</text>
+    </view>
+    <view class="image-wrapper" bindtap="selectImage" data-index="1">
+      <image id="image-b" src="{{currentQuestion.imagePathB || currentQuestion.imagePath}}" mode="aspectFill" bindload="imageLoad" binderror="imageError"></image>
+      <view class="image-loading" wx:if="{{!imageBloaded}}">
+        <text>加载中...</text>
+      </view>
+      <text class="image-label">B</text>
+    </view>
+  </view>
+  
+  <view class="question-container">
+    <text id="question-text">{{currentQuestion.question}}</text>
+    <view class="options" wx:if="{{currentQuestion.type === 'select_sentence'}}">
+      <button class="option {{selectedOption === 0 ? 'selected' : ''}} {{isAnswered && 0 === currentQuestion.answer ? 'correct' : ''}} {{isAnswered && selectedOption === 0 && 0 !== currentQuestion.answer ? 'incorrect' : ''}}" bindtap="selectOption" data-index="0">{{currentQuestion.options[0]}}</button>
+      <button class="option {{selectedOption === 1 ? 'selected' : ''}} {{isAnswered && 1 === currentQuestion.answer ? 'correct' : ''}} {{isAnswered && selectedOption === 1 && 1 !== currentQuestion.answer ? 'incorrect' : ''}}" bindtap="selectOption" data-index="1">{{currentQuestion.options[1]}}</button>
+      <button class="option {{selectedOption === 2 ? 'selected' : ''}} {{isAnswered && 2 === currentQuestion.answer ? 'correct' : ''}} {{isAnswered && selectedOption === 2 && 2 !== currentQuestion.answer ? 'incorrect' : ''}}" bindtap="selectOption" data-index="2">{{currentQuestion.options[2]}}</button>
+      <button class="option {{selectedOption === 3 ? 'selected' : ''}} {{isAnswered && 3 === currentQuestion.answer ? 'correct' : ''}} {{isAnswered && selectedOption === 3 && 3 !== currentQuestion.answer ? 'incorrect' : ''}}" bindtap="selectOption" data-index="3">{{currentQuestion.options[3]}}</button>
+    </view>
+    
+    <view class="feedback-container" wx:if="{{isAnswered}}">
+      <view class="feedback-message {{isCorrect ? 'correct' : 'incorrect'}}">{{isCorrect ? '回答正确！' : '回答错误，再试一次！'}}</view>
+      <view class="text-info">
+        <view class="text-item">
+          <text class="text-label">中文原文：</text>
+          <text class="text-content">{{currentQuestion.audioText}}</text>
+        </view>
+        <view class="text-item">
+          <text class="text-label">拼音：</text>
+          <text class="text-content">{{currentQuestion.pinyin}}</text>
+        </view>
+        <view class="text-item">
+          <text class="text-label">英文翻译：</text>
+          <text class="text-content">{{currentQuestion.translation}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="practice-controls">
+    <button id="prev-question" bindtap="changeQuestion" data-direction="-1">上一题</button>
+    <button id="next-question" bindtap="changeQuestion" data-direction="1">下一题</button>
+  </view>
+</view>

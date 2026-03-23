@@ -10,6 +10,7 @@ class ChineseListeningApp {
         this.filteredQuestions = [];
         this.answers = {}; // 存储用户的答题结果
         this.audioContext = null;
+        this.supabase = null; // 稍后初始化
         this.init();
     }
 
@@ -17,9 +18,173 @@ class ChineseListeningApp {
         this.loadSettings();
         this.setupEventListeners();
         this.filterQuestionsByDifficulty();
+        // 初始化Supabase
+        console.log('开始初始化Supabase');
+        if (typeof supabase !== 'undefined') {
+            console.log('Supabase SDK已加载');
+            try {
+                console.log('开始创建Supabase客户端');
+                this.supabase = supabase.createClient(
+                    'https://jvukpyjiufkfftrnuqjh.supabase.co',
+                    'sb_publishable_mXFmf7gE96PsYJ_DNSoojA_I7ahV41Y'
+                );
+                console.log('Supabase客户端创建成功:', this.supabase);
+                // 测试连接
+                this.testSupabaseConnection();
+            } catch (error) {
+                console.error('创建Supabase客户端失败:', error);
+                console.error('失败详情:', JSON.stringify(error));
+            }
+        } else {
+            console.error('Supabase SDK未加载');
+        }
         // 移除初始化时加载问题，因为此时练习页面还没有显示
         this.handleHashChange();
         this.applyTheme();
+    }
+    
+    async testSupabaseConnection() {
+        try {
+            console.log('测试Supabase连接');
+            console.log('Supabase客户端:', this.supabase);
+            if (!this.supabase) {
+                console.error('Supabase客户端未创建');
+                return;
+            }
+            console.log('开始测试scores表访问');
+            // 尝试使用最简单的查询
+            const { data, error } = await this.supabase
+                .from('scores')
+                .select('*')
+                .limit(1);
+            
+            if (error) {
+                console.error('Supabase连接测试失败:', error);
+                console.error('错误详情:', JSON.stringify(error));
+                console.error('错误代码:', error.code);
+                console.error('错误提示:', error.hint);
+                // 检查是否是行级安全策略问题
+                if (error.code === '42501') {
+                    console.error('行级安全策略阻止了访问，请在Supabase控制台中配置RLS策略');
+                    alert('Supabase行级安全策略阻止了访问，请在Supabase控制台中配置RLS策略');
+                } else {
+                    // 尝试创建表结构
+                    this.createScoresTable();
+                }
+            } else {
+                console.log('Supabase连接测试成功:', data);
+            }
+        } catch (error) {
+            console.error('Supabase连接测试异常:', error);
+            console.error('异常详情:', JSON.stringify(error));
+        }
+    }
+    
+    async createScoresTable() {
+        try {
+            console.log('尝试创建scores表');
+            // 注意：在实际应用中，表结构应该在Supabase控制台中创建
+            // 这里尝试使用不同的字段名称，可能表结构已经存在但字段名称不同
+            const { data, error } = await this.supabase
+                .from('scores')
+                .insert({
+                    player_name: 'test',
+                    points: 0,
+                    created_at: new Date().toISOString()
+                });
+            
+            if (error) {
+                console.error('创建表失败:', error);
+                // 尝试使用更简单的结构
+                this.createSimpleScoresTable();
+            } else {
+                console.log('表创建成功:', data);
+            }
+        } catch (error) {
+            console.error('创建表异常:', error);
+        }
+    }
+    
+    async createSimpleScoresTable() {
+        try {
+            console.log('尝试创建简单的scores表');
+            // 尝试使用最基本的字段
+            const { data, error } = await this.supabase
+                .from('scores')
+                .insert({});
+            
+            if (error) {
+                console.error('创建简单表失败:', error);
+                console.error('错误详情:', JSON.stringify(error));
+                // 尝试检查表结构
+                this.checkTableStructure();
+            } else {
+                console.log('简单表创建成功:', data);
+            }
+        } catch (error) {
+            console.error('创建简单表异常:', error);
+        }
+    }
+    
+    async checkTableStructure() {
+        try {
+            console.log('尝试检查表结构');
+            // 尝试获取表的列信息
+            // 注意：这需要使用Supabase的Admin API或SQL查询
+            // 这里我们尝试使用不同的查询方式来推断表结构
+            const { data, error } = await this.supabase
+                .from('scores')
+                .select('*')
+                .limit(1);
+            
+            if (error) {
+                console.error('检查表结构失败:', error);
+                console.error('错误详情:', JSON.stringify(error));
+                // 尝试创建一个新的表
+                this.createNewScoresTable();
+            } else {
+                console.log('表结构查询成功:', data);
+                if (data && data.length > 0) {
+                    console.log('表列信息:', Object.keys(data[0]));
+                }
+            }
+        } catch (error) {
+            console.error('检查表结构异常:', error);
+            console.error('异常详情:', JSON.stringify(error));
+        }
+    }
+    
+    async createNewScoresTable() {
+        try {
+            console.log('尝试创建新的scores表');
+            // 注意：在实际应用中，表结构应该在Supabase控制台中创建
+            // 这里我们尝试使用Supabase的API来创建表
+            // 但是，这需要使用服务端密钥，而不是客户端密钥
+            // 所以我们这里只是尝试，可能会失败
+            const { data, error } = await this.supabase
+                .rpc('create_scores_table');
+            
+            if (error) {
+                console.error('创建新表失败:', error);
+                console.error('错误详情:', JSON.stringify(error));
+                // 尝试使用不同的方法
+                this.tryDifferentApproach();
+            } else {
+                console.log('新表创建成功:', data);
+            }
+        } catch (error) {
+            console.error('创建新表异常:', error);
+            console.error('异常详情:', JSON.stringify(error));
+            // 尝试使用不同的方法
+            this.tryDifferentApproach();
+        }
+    }
+    
+    tryDifferentApproach() {
+        console.log('尝试不同的方法');
+        // 由于我们无法修改数据库结构，我们需要使用本地存储作为主要方案
+        // 并向用户提供明确的说明
+        alert('无法连接到Supabase数据库，请在Supabase控制台中创建scores表并配置RLS策略。现在将使用本地存储来保存成绩。');
     }
 
     initAudioContext() {
@@ -269,6 +434,11 @@ class ChineseListeningApp {
         
         document.getElementById('change-difficulty').addEventListener('click', () => {
             this.showPage('home');
+        });
+        
+        // 排行榜按钮事件
+        document.getElementById('show-leaderboard').addEventListener('click', () => {
+            this.showLeaderboard();
         });
     }
 
@@ -532,6 +702,311 @@ class ChineseListeningApp {
         
         // 显示结果页面
         this.showPage('results');
+        
+        // 弹出输入框让用户填名字
+        setTimeout(() => {
+            this.saveScore(score, correctCount, totalCount);
+        }, 1000);
+    }
+    
+    async saveScore(score, correctCount, totalCount) {
+        const playerName = prompt('请输入您的名字，保存您的成绩：');
+        if (playerName && playerName.trim() !== '') {
+            try {
+                // 尝试使用Supabase保存成绩
+                if (this.supabase) {
+                    console.log('开始使用Supabase保存成绩:', {
+                        player_name: playerName.trim(),
+                        level: this.settings.difficulty === 'easy' ? 1 : this.settings.difficulty === 'medium' ? 2 : 3,
+                        score: score,
+                        total: totalCount
+                    });
+                    try {
+                        // 使用正确的字段名称
+                        const { data, error } = await this.supabase
+                            .from('scores')
+                            .insert({
+                                player_name: playerName.trim(),
+                                level: this.settings.difficulty === 'easy' ? 1 : this.settings.difficulty === 'medium' ? 2 : 3,
+                                score: score,
+                                total: totalCount
+                            });
+                        
+                        if (error) {
+                            console.error('Supabase保存成绩失败:', error);
+                            console.error('错误详情:', JSON.stringify(error));
+                            // 检查是否是行级安全策略问题
+                            if (error.code === '42501') {
+                                console.error('行级安全策略阻止了保存，请在Supabase控制台中配置RLS策略');
+                                alert('Supabase行级安全策略阻止了保存，请在Supabase控制台中配置RLS策略。现在将使用本地存储来保存成绩。');
+                            } else {
+                                alert('保存成绩失败，请稍后再试。现在将使用本地存储来保存成绩。');
+                            }
+                            // 保存到本地作为备用
+                            this.saveScoreToLocalStorage(playerName.trim(), score);
+                        } else {
+                            console.log('Supabase成绩保存成功:', data);
+                            alert('成绩保存成功！');
+                        }
+                    } catch (error) {
+                        console.error('Supabase保存成绩时出错:', error);
+                        // 出错时使用本地存储作为备用
+                        this.saveScoreToLocalStorage(playerName.trim(), score);
+                    }
+                } else {
+                    // Supabase未初始化，使用本地存储
+                    this.saveScoreToLocalStorage(playerName.trim(), score);
+                }
+            } catch (error) {
+                console.error('保存成绩时出错:', error);
+                alert('保存成绩时出错，请稍后再试');
+            }
+        }
+    }
+    
+    async saveScoreWithAlternativeFields(name, score) {
+        try {
+            console.log('尝试使用替代字段保存成绩:', {
+                username: name,
+                score: score
+            });
+            const { data, error } = await this.supabase
+                .from('scores')
+                .insert({
+                    username: name,
+                    score: score
+                });
+            
+            if (error) {
+                console.error('使用替代字段保存成绩失败:', error);
+                console.error('错误详情:', JSON.stringify(error));
+                console.error('错误代码:', error.code);
+                console.error('错误提示:', error.hint);
+                // 检查是否是行级安全策略问题
+                if (error.code === '42501') {
+                    console.error('行级安全策略阻止了保存，请在Supabase控制台中配置RLS策略');
+                    alert('Supabase行级安全策略阻止了保存，请在Supabase控制台中配置RLS策略');
+                }
+                // 失败时使用本地存储作为备用
+                this.saveScoreToLocalStorage(name, score);
+            } else {
+                console.log('使用替代字段成绩保存成功:', data);
+                alert('成绩保存成功！');
+            }
+        } catch (error) {
+            console.error('使用替代字段保存成绩时出错:', error);
+            console.error('异常详情:', JSON.stringify(error));
+            // 出错时使用本地存储作为备用
+            this.saveScoreToLocalStorage(name, score);
+        }
+    }
+    
+    saveScoreToLocalStorage(name, score) {
+        try {
+            console.log('使用本地存储保存成绩:', { name, score });
+            // 从本地存储获取现有成绩
+            const existingScores = JSON.parse(localStorage.getItem('chineseListeningScores') || '[]');
+            // 添加新成绩
+            existingScores.push({
+                name: name,
+                score: score,
+                created_at: new Date().toISOString()
+            });
+            // 按分数降序排序
+            existingScores.sort((a, b) => b.score - a.score);
+            // 只保留前10名
+            const topScores = existingScores.slice(0, 10);
+            // 保存回本地存储
+            localStorage.setItem('chineseListeningScores', JSON.stringify(topScores));
+            console.log('本地存储成绩保存成功');
+            alert('成绩已保存到本地！');
+        } catch (error) {
+            console.error('本地存储保存成绩失败:', error);
+            alert('保存成绩失败，请稍后再试');
+        }
+    }
+    
+    async showLeaderboard() {
+        try {
+            // 尝试使用Supabase获取排行榜
+            if (this.supabase) {
+                console.log('开始使用Supabase获取排行榜');
+                try {
+                    // 使用正确的字段名称，按照level、score和created_at排序
+                    const { data, error } = await this.supabase
+                        .from('scores')
+                        .select('player_name, score, created_at, level')
+                        .order('level', { ascending: true })
+                        .order('score', { ascending: false })
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) {
+                        console.error('Supabase获取排行榜失败:', error);
+                        console.error('错误详情:', JSON.stringify(error));
+                        // 失败时使用本地存储作为备用
+                        this.showLocalLeaderboard();
+                    } else {
+                        console.log('Supabase获取排行榜成功:', data);
+                        // 检查数据是否包含level字段
+                        if (data && data.length > 0) {
+                            console.log('数据包含level字段:', 'level' in data[0]);
+                            console.log('第一个数据项:', data[0]);
+                        }
+                        // 按照难度等级分组显示
+                        console.log('调用displayLeaderboardByLevel方法');
+                        this.displayLeaderboardByLevel(data);
+                    }
+                } catch (error) {
+                    console.error('Supabase获取排行榜时出错:', error);
+                    // 出错时使用本地存储作为备用
+                    this.showLocalLeaderboard();
+                }
+            } else {
+                // Supabase未初始化，使用本地存储
+                this.showLocalLeaderboard();
+            }
+        } catch (error) {
+            console.error('显示排行榜时出错:', error);
+            alert('显示排行榜时出错，请稍后再试');
+        }
+    }
+    
+    showLocalLeaderboard() {
+        try {
+            console.log('使用本地存储显示排行榜');
+            // 从本地存储获取成绩
+            const scores = JSON.parse(localStorage.getItem('chineseListeningScores') || '[]');
+            // 由于本地存储的成绩没有难度等级信息，直接显示
+            this.displayLeaderboard(scores);
+        } catch (error) {
+            console.error('显示本地排行榜时出错:', error);
+            alert('显示排行榜时出错，请稍后再试');
+        }
+    }
+    
+    displayLeaderboard(data) {
+        // 生成排行榜HTML
+        let leaderboardHTML = '<h3>排行榜</h3><table><tr><th>排名</th><th>姓名</th><th>得分</th><th>日期</th></tr>';
+        if (data && data.length > 0) {
+            data.forEach((item, index) => {
+                const date = new Date(item.created_at).toLocaleString();
+                leaderboardHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.score}</td>
+                        <td>${date}</td>
+                    </tr>
+                `;
+            });
+        } else {
+            leaderboardHTML += '<tr><td colspan="4">暂无数据</td></tr>';
+        }
+        leaderboardHTML += '</table>';
+        
+        // 显示排行榜
+        const leaderboardContainer = document.getElementById('leaderboard-container');
+        if (leaderboardContainer) {
+            leaderboardContainer.innerHTML = leaderboardHTML;
+            leaderboardContainer.style.display = 'block';
+        } else {
+            // 如果没有排行榜容器，创建一个
+            const resultsContainer = document.querySelector('.results-container');
+            if (resultsContainer) {
+                const newLeaderboardContainer = document.createElement('div');
+                newLeaderboardContainer.id = 'leaderboard-container';
+                newLeaderboardContainer.className = 'leaderboard-container';
+                newLeaderboardContainer.innerHTML = leaderboardHTML;
+                resultsContainer.appendChild(newLeaderboardContainer);
+            }
+        }
+    }
+    
+    displayLeaderboardByLevel(data) {
+        console.log('开始处理排行榜数据:', data);
+        // 按照难度等级分组
+        const levelGroups = {
+            1: { name: '初级', data: [] },
+            2: { name: '中级', data: [] },
+            3: { name: '高级', data: [] }
+        };
+        
+        // 分类数据
+        if (data && data.length > 0) {
+            data.forEach(item => {
+                console.log('处理数据项:', item);
+                // 检查是否有level字段
+                if (item.level) {
+                    console.log('数据项包含level字段:', item.level);
+                    if (levelGroups[item.level]) {
+                        levelGroups[item.level].data.push({
+                            name: item.player_name || item.name,
+                            score: item.score,
+                            created_at: item.created_at
+                        });
+                    }
+                } else {
+                    console.log('数据项不包含level字段，放入默认组');
+                    // 如果没有level字段，放入中级组
+                    levelGroups[2].data.push({
+                        name: item.player_name || item.name,
+                        score: item.score,
+                        created_at: item.created_at
+                    });
+                }
+            });
+        }
+        
+        // 生成排行榜HTML
+        let leaderboardHTML = '<h3>排行榜</h3>';
+        
+        // 遍历每个难度等级
+        Object.keys(levelGroups).forEach(level => {
+            const group = levelGroups[level];
+            console.log('处理难度等级:', group.name, '数据量:', group.data.length);
+            if (group.data.length > 0) {
+                leaderboardHTML += `<h4>${group.name}</h4>`;
+                leaderboardHTML += '<table><tr><th>排名</th><th>姓名</th><th>得分</th><th>日期</th></tr>';
+                
+                group.data.forEach((item, index) => {
+                    const date = new Date(item.created_at).toLocaleString();
+                    leaderboardHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.name || '未知'}</td>
+                            <td>${item.score || 0}</td>
+                            <td>${date}</td>
+                        </tr>
+                    `;
+                });
+                
+                leaderboardHTML += '</table>';
+            }
+        });
+        
+        // 如果没有数据
+        if (!data || data.length === 0) {
+            leaderboardHTML += '<p>暂无数据</p>';
+        }
+        
+        console.log('生成的排行榜HTML:', leaderboardHTML);
+        
+        // 显示排行榜
+        const leaderboardContainer = document.getElementById('leaderboard-container');
+        if (leaderboardContainer) {
+            leaderboardContainer.innerHTML = leaderboardHTML;
+            leaderboardContainer.style.display = 'block';
+        } else {
+            // 如果没有排行榜容器，创建一个
+            const resultsContainer = document.querySelector('.results-container');
+            if (resultsContainer) {
+                const newLeaderboardContainer = document.createElement('div');
+                newLeaderboardContainer.id = 'leaderboard-container';
+                newLeaderboardContainer.className = 'leaderboard-container';
+                newLeaderboardContainer.innerHTML = leaderboardHTML;
+                resultsContainer.appendChild(newLeaderboardContainer);
+            }
+        }
     }
     
     resetPractice() {

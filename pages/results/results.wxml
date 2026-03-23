@@ -1,0 +1,68 @@
+<!-- results.wxml -->
+<view class="results-container">
+  <view class="score-card">
+    <text class="score-title">总分</text>
+    <text class="score-value">{{score}}</text>
+    <view class="score-info">
+      <text>{{correctCount}} 正确 / {{totalCount}} 总题数</text>
+    </view>
+  </view>
+  
+  <view class="review-container">
+    <text class="review-title">答题回顾</text>
+    <view class="review-list">
+      <view wx:for="{{reviewItems}}" wx:key="{{item.id}}" class="review-item {{item.isCorrect ? 'correct' : 'incorrect'}}">
+        <view class="review-item-header">
+          <text class="review-question-number">第 {{index + 1}} 题</text>
+          <text class="review-result">{{item.isCorrect ? '正确' : '错误'}}</text>
+        </view>
+        <view class="review-item-content">
+          <text class="review-question">{{item.question}}</text>
+          <view class="review-options">
+            <view wx:for="{{item.options}}" wx:key="{{index}}" class="review-option {{item.selected === index ? 'selected' : ''}} {{item.answer === index ? 'correct-answer' : ''}}">
+              <text class="option-label">{{String.fromCharCode(65 + index)}}</text>
+              <text class="option-text">{{item}}</text>
+              <text wx:if="{{item.selected === index && !item.isCorrect}}" class="selected-mark">✗</text>
+              <text wx:if="{{item.answer === index}}" class="correct-mark">✓</text>
+            </view>
+          </view>
+          <view class="review-audio-text">
+            <text class="text-label">音频文本：</text>
+            <text class="text-content">{{item.audioText}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="results-buttons">
+    <button id="play-again" bindtap="playAgain">再来一次</button>
+    <button id="change-difficulty" bindtap="changeDifficulty">换个难度</button>
+    <button id="show-leaderboard" bindtap="showLeaderboard">排行榜</button>
+  </view>
+  
+  <!-- 排行榜弹窗 -->
+  <view class="leaderboard-modal" wx:if="{{showLeaderboard}}">
+    <view class="leaderboard-content">
+      <text class="leaderboard-title">排行榜</text>
+      <view class="leaderboard-list">
+        <view class="leaderboard-header">
+          <text class="leaderboard-rank">排名</text>
+          <text class="leaderboard-name">姓名</text>
+          <text class="leaderboard-score">得分</text>
+          <text class="leaderboard-date">日期</text>
+        </view>
+        <view wx:for="{{leaderboardData}}" wx:key="index" class="leaderboard-item">
+          <text class="leaderboard-rank">{{index + 1}}</text>
+          <text class="leaderboard-name">{{item.name}}</text>
+          <text class="leaderboard-score">{{item.score}}</text>
+          <text class="leaderboard-date">{{item.date}}</text>
+        </view>
+        <view wx:if="{{leaderboardData.length === 0}}" class="leaderboard-empty">
+          <text>暂无数据</text>
+        </view>
+      </view>
+      <button class="close-button" bindtap="closeLeaderboard">关闭</button>
+    </view>
+  </view>
+</view>
