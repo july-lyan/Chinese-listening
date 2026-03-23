@@ -1,8 +1,27 @@
 // supabase.js
 // 简化版Supabase客户端，适配微信小程序
 
-const supabaseUrl = 'https://jvukpyjiufkfftrnuqjh.supabase.co'
-const supabaseKey = 'sb_publishable_mXFmf7gE96PsYJ_DNSoojA_I7ahV41Y'
+// 从环境变量读取 Supabase 配置
+let supabaseUrl = ''
+let supabaseKey = ''
+
+// 尝试从环境变量读取
+if (process && process.env) {
+  supabaseUrl = process.env.Project_URL || ''
+  supabaseKey = process.env.Publishable_Key || ''
+}
+
+// 如果环境变量中没有，尝试从全局变量读取（微信小程序环境）
+if (!supabaseUrl || !supabaseKey) {
+  if (typeof global !== 'undefined' && global.process && global.process.env) {
+    supabaseUrl = global.process.env.Project_URL || ''
+    supabaseKey = global.process.env.Publishable_Key || ''
+  }
+}
+
+// 默认值，防止环境变量未设置
+if (!supabaseUrl) supabaseUrl = 'https://jvukpyjiufkfftrnuqjh.supabase.co'
+if (!supabaseKey) supabaseKey = 'sb_publishable_mXFmf7gE96PsYJ_DNSoojA_I7ahV41Y'
 
 function createClient(url = supabaseUrl, key = supabaseKey) {
   return {

@@ -24,9 +24,26 @@ class ChineseListeningApp {
             console.log('Supabase SDK已加载');
             try {
                 console.log('开始创建Supabase客户端');
+                // 从环境变量读取Supabase配置
+                let supabaseUrl = ''
+                let supabaseKey = ''
+                
+                // 尝试从环境变量读取
+                if (process && process.env) {
+                  supabaseUrl = process.env.Project_URL || ''
+                  supabaseKey = process.env.Publishable_Key || ''
+                }
+                
+                // 如果环境变量中没有，使用默认值
+                if (!supabaseUrl) supabaseUrl = 'https://jvukpyjiufkfftrnuqjh.supabase.co'
+                if (!supabaseKey) supabaseKey = 'sb_publishable_mXFmf7gE96PsYJ_DNSoojA_I7ahV41Y'
+                
+                console.log('使用的Supabase URL:', supabaseUrl);
+                console.log('使用的Supabase Key:', supabaseKey ? '***' : '未设置');
+                
                 this.supabase = supabase.createClient(
-                    'https://jvukpyjiufkfftrnuqjh.supabase.co',
-                    'sb_publishable_mXFmf7gE96PsYJ_DNSoojA_I7ahV41Y'
+                    supabaseUrl,
+                    supabaseKey
                 );
                 console.log('Supabase客户端创建成功:', this.supabase);
                 // 测试连接
